@@ -12,11 +12,25 @@ export class ApiHttpError extends Error {
 
 const baseUrl = process.env.API_URL ?? "http://localhost:8080/api";
 
-export async function apiPost<T>(path: string, body: unknown): Promise<T> {
+async function apiFetch<T>(
+  path: string,
+  options: {
+    method: string;
+    body?: unknown;
+    token?: string;
+  }
+): Promise<T> {
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+  if (options.token) {
+    headers["Authorization"] = `Bearer ${options.token}`;
+  }
+
   const response = await fetch(`${baseUrl}${path}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
+    method: options.method,
+    headers,
+    body: options.body !== undefined ? JSON.stringify(options.body) : undefined,
     cache: "no-store",
   });
 
@@ -32,4 +46,12 @@ export async function apiPost<T>(path: string, body: unknown): Promise<T> {
 
   if (response.status === 204) return undefined as T;
   return response.json() as Promise<T>;
+}
+
+export function apiPost<T>(path: string, body: unknown, token?: string): Promise<T> {
+  return apiFetch<T>(path, { method: "POST", body, token });
+}
+
+export function apiGet<T>(path: string, token?: string): Promise<T> {
+  return apiFetch<T>(path, { method: "GET", token });
 }

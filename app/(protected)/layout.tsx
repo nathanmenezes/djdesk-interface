@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { getAccessToken } from "@/lib/session";
+import { DjNavigation } from "@/components/layout/dj-navigation";
 
 export default async function ProtectedLayout({
   children,
@@ -8,5 +9,11 @@ export default async function ProtectedLayout({
 }) {
   const token = await getAccessToken();
   if (!token) redirect("/login");
-  return <>{children}</>;
+
+  return (
+    <div className="min-h-screen" style={{ background: "#000" }}>
+      <main className="pb-28">{children}</main>
+      <DjNavigation />
+    </div>
+  );
 }
