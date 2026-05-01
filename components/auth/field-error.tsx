@@ -8,7 +8,11 @@ export function FieldError({ errors }: Props) {
   return (
     <ul className="mt-1 space-y-0.5">
       {errors.map((error) => (
-        <li key={error} className="text-xs text-red-500">
+        <li
+          key={error}
+          className="text-xs"
+          style={{ color: "oklch(0.72 0.18 25)" }}
+        >
           {error}
         </li>
       ))}

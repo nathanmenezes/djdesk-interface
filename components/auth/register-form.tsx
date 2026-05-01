@@ -1,28 +1,55 @@
 "use client";
 
+import { useRef } from "react";
 import { useActionState } from "react";
+import { useGSAP } from "@gsap/react";
+import { gsap } from "gsap";
 import { registerAction } from "@/actions/auth.actions";
 import { FieldError } from "./field-error";
 import { SubmitButton } from "./submit-button";
 import type { ActionState } from "@/types/auth";
 
+gsap.registerPlugin(useGSAP);
+
 const initialState: ActionState = {};
 
 export function RegisterForm() {
+  const formRef = useRef<HTMLFormElement>(null);
   const [state, formAction] = useActionState(registerAction, initialState);
 
+  useGSAP(
+    () => {
+      gsap.from(".auth-field", {
+        autoAlpha: 0,
+        y: 16,
+        duration: 0.5,
+        stagger: 0.09,
+        ease: "power2.out",
+      });
+    },
+    { scope: formRef }
+  );
+
   return (
-    <form action={formAction} className="flex flex-col gap-4">
+    <form ref={formRef} action={formAction} className="flex flex-col gap-4">
       {state.message && (
-        <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-600">
+        <p
+          className="rounded px-3 py-2 text-sm"
+          style={{
+            background: "oklch(0.15 0.07 25)",
+            border: "1px solid oklch(0.4 0.18 25)",
+            color: "oklch(0.8 0.15 25)",
+          }}
+        >
           {state.message}
         </p>
       )}
 
-      <div>
+      <div className="auth-field flex flex-col gap-1">
         <label
           htmlFor="fullName"
-          className="block text-sm font-medium text-zinc-700"
+          className="text-xs font-medium uppercase tracking-widest"
+          style={{ color: "oklch(0.6 0.08 25)" }}
         >
           Nome completo
         </label>
@@ -32,15 +59,16 @@ export function RegisterForm() {
           type="text"
           autoComplete="name"
           required
-          className="mt-1 block w-full rounded-md border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-zinc-500"
+          className="auth-input"
         />
         <FieldError errors={state.fieldErrors?.fullName} />
       </div>
 
-      <div>
+      <div className="auth-field flex flex-col gap-1">
         <label
           htmlFor="artisticName"
-          className="block text-sm font-medium text-zinc-700"
+          className="text-xs font-medium uppercase tracking-widest"
+          style={{ color: "oklch(0.6 0.08 25)" }}
         >
           Nome artístico
         </label>
@@ -49,15 +77,16 @@ export function RegisterForm() {
           name="artisticName"
           type="text"
           required
-          className="mt-1 block w-full rounded-md border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-zinc-500"
+          className="auth-input"
         />
         <FieldError errors={state.fieldErrors?.artisticName} />
       </div>
 
-      <div>
+      <div className="auth-field flex flex-col gap-1">
         <label
           htmlFor="email"
-          className="block text-sm font-medium text-zinc-700"
+          className="text-xs font-medium uppercase tracking-widest"
+          style={{ color: "oklch(0.6 0.08 25)" }}
         >
           E-mail
         </label>
@@ -67,15 +96,16 @@ export function RegisterForm() {
           type="email"
           autoComplete="email"
           required
-          className="mt-1 block w-full rounded-md border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-zinc-500"
+          className="auth-input"
         />
         <FieldError errors={state.fieldErrors?.email} />
       </div>
 
-      <div>
+      <div className="auth-field flex flex-col gap-1">
         <label
           htmlFor="password"
-          className="block text-sm font-medium text-zinc-700"
+          className="text-xs font-medium uppercase tracking-widest"
+          style={{ color: "oklch(0.6 0.08 25)" }}
         >
           Senha
         </label>
@@ -85,12 +115,14 @@ export function RegisterForm() {
           type="password"
           autoComplete="new-password"
           required
-          className="mt-1 block w-full rounded-md border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-zinc-500"
+          className="auth-input"
         />
         <FieldError errors={state.fieldErrors?.password} />
       </div>
 
-      <SubmitButton label="Criar conta" pendingLabel="Criando conta..." />
+      <div className="auth-field">
+        <SubmitButton label="Criar conta" pendingLabel="Criando conta..." />
+      </div>
     </form>
   );
 }
