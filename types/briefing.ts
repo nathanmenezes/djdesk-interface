@@ -35,3 +35,30 @@ export interface BriefingChatState {
   isComplete: boolean;
   error: string | null;
 }
+
+export interface BriefingResultResponse {
+  eventSlug: string;
+  summary: string;
+  guestProfile: string;
+  vibe: string;
+  preferredStyles: string[];
+  forbiddenStyles: string[];
+  requiredSongs: Array<{
+    title: string;
+    artist: string;
+    moment?: string;
+    notes?: string;
+  }>;
+  forbiddenSongs: Array<{
+    titleOrArtist: string;
+    reason?: string;
+  }>;
+  moments: Array<{
+    name: string;
+    vibe?: string;
+    styles?: string[];
+    observation?: string;
+  }>;
+  generatedAt: string;
+}
+

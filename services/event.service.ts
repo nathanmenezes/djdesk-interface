@@ -1,5 +1,6 @@
 import { authenticatedGet, authenticatedPost } from "@/lib/api";
 import type { CreateEventPayload, EventResponse } from "@/types/event";
+import type { BriefingResultResponse } from "@/types/briefing";
 
 export const eventService = {
   create: (payload: CreateEventPayload) =>
@@ -8,4 +9,8 @@ export const eventService = {
   list: () => authenticatedGet<EventResponse[]>("/v1/events"),
 
   find: (slug: string) => authenticatedGet<EventResponse>(`/v1/events/${slug}`),
+
+  getBriefingResult: (slug: string) =>
+    authenticatedGet<BriefingResultResponse>(`/v1/events/${slug}/briefing-result`),
 };
+
